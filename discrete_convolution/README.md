@@ -20,7 +20,3 @@ is lesser than 1e-4, with Matlab conv treated as exact value). It is designed fo
 WARNING: before executing test.py please make sure to specify the path to the csv file (FILE_PATH) in both
 matlab_convolution.m and test.py. FILE_PATH should be the same in both cases. matlab_convolution.m will create this csv file
 and it is required for the test.py to work.
-
-
-Files requirements.txt and requirements.dev.txt contain list of python libraries required for python_convolution.py
-and tests (test.py, comparison.py) to work.
