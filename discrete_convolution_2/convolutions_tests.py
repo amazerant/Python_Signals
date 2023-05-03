@@ -2,7 +2,9 @@ import timeit
 import tracemalloc
 import logging
 import argparse
-
+import matlab.engine
+import matplotlib.pyplot as plt
+import numpy as np
 import convolutions
 
 convInput = convolutions.convInput
@@ -12,7 +14,7 @@ def test(function,input_signal,kernel,number,logger):
     '''executes {function} with given {input_signal} and {kernel}, measures total execution time of {number} executions and memory usage'''
     try:
         tracemalloc.start()
-        result = eval(function)(eval(input_signal),eval(kernel))
+        convolution = eval(function)(eval(input_signal),eval(kernel))
         memory = tracemalloc.get_traced_memory()
         tracemalloc.stop()
     except Exception as e:
@@ -24,8 +26,47 @@ def test(function,input_signal,kernel,number,logger):
         number = number,
         setup=f"from __main__ import {function}"
     )
-    logger.info(f"function name: {function}\ninput_signal signal: {input_signal}\nkernel: {kernel}\nreturned: {result}\ntotal execution time: {czas}\nnumber of executions: {number}\nmemory usage: {memory}")
-        
+    input_signal = eval(input_signal)
+    kernel = eval(kernel)
+    n = len(input_signal)
+    m = len(kernel)  
+    with open('thisFileWillRemoveItself.csv','w',newline='') as csvfile:
+        csvfile.write(f"{n},"+str(input_signal).replace(' ','').replace('[','').replace(']','').replace(')','').replace('(','')+'\n')
+        csvfile.write(f"{m},"+str(kernel).replace(' ','').replace('[','').replace(']','').replace(')','').replace('(','')+'\n')
+    logger.info(f"function name: {function}\ninput_signal signal: {input_signal}\nkernel: {kernel}\nreturned: {convolution}\ntotal execution time: {czas}\nnumber of executions: {number}\nmemory usage: {memory}")
+    x_inp = range(0,len(input_signal),1)
+    x_ker = range(0,len(kernel),1)
+    x_conv = range(0,len(convolution),1)
+    plt.subplot(2,3,1)
+    plt.stem(x_inp,np.real(input_signal),basefmt='black',markerfmt='s')
+    plt.xticks(x_inp)
+    plt.title('Input signal (real part)')
+    plt.subplot(2,3,2)
+    plt.stem(x_ker,np.real(kernel),basefmt='black',markerfmt='s')
+    plt.xticks(x_ker)
+    plt.title('Kernel (real part)')
+    plt.subplot(2,3,3)
+    plt.stem(x_conv,np.real(convolution),basefmt='black',markerfmt='s')
+    plt.xticks(x_conv)
+    plt.title('Convolution (real part)')
+    plt.subplot(2,3,4)
+    plt.stem(x_inp,np.imag(input_signal),basefmt='black',markerfmt='s')
+    plt.xticks(x_inp)
+    plt.title('Input signal (imaginary part)')
+    plt.subplot(2,3,5)
+    plt.stem(x_ker,np.imag(kernel),basefmt='black',markerfmt='s')
+    plt.xticks(x_ker)
+    plt.title('Kernel (imaginary part)')
+    plt.subplot(2,3,6)
+    plt.stem(x_conv,np.imag(convolution),basefmt='black',markerfmt='s')
+    plt.xticks(x_conv)
+    plt.title('Convolution (imaginary part)')
+    figure = plt.gcf()
+    figure.set_size_inches(16,12)
+    plt.savefig("plotPython.png",dpi=100)
+    eng = matlab.engine.start_matlab()
+    eng.convolutions_tests(nargout=0)
+    eng.quit()
 if __name__ == "__main__":
     logging.basicConfig(filemode="w",level="INFO")
 
