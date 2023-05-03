@@ -2,8 +2,7 @@ import numpy as np
 
 def convInput(input_signal,kernel):
     '''algorithm taken from the chapter 6 of the book:
-    "The Scientist and Engineer's Guide to Digital Signal Processing" by Steven W. Smith, Ph.D. http://www.dspguide.com/ch6.htm
-    adapted to Python and edited by Mazerant Adam https://github.com/amazerant'''
+    "The Scientist and Engineer's Guide to Digital Signal Processing" by Steven W. Smith, Ph.D. http://www.dspguide.com/ch6.htm'''
     try:
         n,m = len(input_signal),len(kernel)
         if n==0 or m==0:
@@ -21,8 +20,7 @@ def convInput(input_signal,kernel):
 
 def convOutput(input_signal,kernel):
     '''algorithm taken from the chapter 6 of the  book:
-    "The Scientist and Engineer's Guide to Digital Signal Processing" by Steven W. Smith, Ph.D.
-    adapted to and edited Python by Mazerant Adam https://github.com/amazerant'''
+    "The Scientist and Engineer's Guide to Digital Signal Processing" by Steven W. Smith, Ph.D. http://www.dspguide.com/ch6.htm'''
     try:
         n,m = len(input_signal),len(kernel)
         if n==0 or m==0:
