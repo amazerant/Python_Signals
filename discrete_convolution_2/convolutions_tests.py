@@ -27,11 +27,6 @@ def testFunction(function,input_signal,kernel,number,logger):
         logger.error(msg=f"function name: {function}\ninput_signal signal: {input_signal}\nkernel: {kernel}\n",exc_info=e)
         return 
 
-    #running unit tests
-    ###add functionality that saves test results into file - right now it only shows them in console###
-    suite = unittest.TestLoader().loadTestsFromTestCase(eval(f"{function}_unittest.TestConvolution"))
-    unittest.TextTestRunner(verbosity=2).run(suite)
-
     #measuring time of executions
     czas = timeit.timeit(
         "eval(function)(eval(input_signal),eval(kernel))",
@@ -50,9 +45,15 @@ def testFunction(function,input_signal,kernel,number,logger):
         csvfile.write(f"{n},"+str(input_signal).replace(' ','').replace('[','').replace(']','').replace(')','').replace('(','')+'\n')
         csvfile.write(f"{m},"+str(kernel).replace(' ','').replace('[','').replace(']','').replace(')','').replace('(','')+'\n')
         
-    #writing output to file
+    #writing output to file "convolutions_tests.log"
     logger.info(f"function name: {function}\ninput_signal signal: {input_signal}\nkernel: {kernel}\nreturned: {convolution}\ntotal execution time: {czas}\nnumber of executions: {number}\nmemory usage: {memory}")
     
+    #running unit tests
+    ###right now results of tests aren't shown in the console###
+    suite = unittest.TestLoader().loadTestsFromTestCase(eval(f"{function}_unittest.TestConvolution"))
+    with open("convolutions_tests.log","a") as logFile:
+        unittest.TextTestRunner(stream=logFile,verbosity=2).run(suite)
+        
     #creating and saving plots
     x_inp = range(0,len(input_signal),1)
     x_ker = range(0,len(kernel),1)
